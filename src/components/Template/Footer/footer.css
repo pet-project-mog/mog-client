@@ -1,0 +1,11 @@
+:local(.container) {
+    display: flex;
+    justify-content: center;
+    height: 5em;
+    margin-top: 1em;
+}
+
+:local(.title) {
+    font-size: 2em;
+    color: #bababd;
+}

@@ -1,0 +1,14 @@
+:local(.container){
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2em 0;
+}
+
+:local(.main){
+    width: 90%;
+    align-self: center;
+    display: inherit;
+    align-items: inherit;
+    justify-content: inherit;
+}
