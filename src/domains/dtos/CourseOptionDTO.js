@@ -18,4 +18,8 @@ export default class CourseOptionDTO {
     get childKey(){
         return this.course.code;
     }
+
+    toEntity(){
+        return this.course
+    }
 }
