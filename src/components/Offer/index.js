@@ -5,7 +5,7 @@ import {Api} from '../../services'
 import SelectedCourses from '../SelectedCourses'
 import {Customer} from '../../domains';
 
-class Proposta extends Component {
+class Offer extends Component {
 
     defaultOptions = [];
 
@@ -152,4 +152,4 @@ class Proposta extends Component {
     }
 }
 
-export default Proposta;
+export default Offer;

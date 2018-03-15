@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import Content from "./components/Template";
-import Proposta from "./components/Proposta";
+import Offer from "./components/Offer";
 
 class App extends Component {
     render() {
@@ -9,7 +9,7 @@ class App extends Component {
             <BrowserRouter>
                 <Content>
                     <Switch>
-                        <Route path="/" component={Proposta}/>
+                        <Route path="/" component={Offer}/>
                     </Switch>
                 </Content>
             </BrowserRouter>
