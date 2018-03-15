@@ -16,11 +16,7 @@ class Header extends Component {
         return (
             <header className={header.container}>
                 <Menu pointing className={header.menu}>
-                    <Menu.Item name="propostas" active={page=== 'propostas'}  as={Link} to="/"  onClick={this.handleItemClick}/>
-
-                    <Menu.Menu position="right">
-                        <Menu.Item name="logout" as={Link} to="/login"  onClick={this.handleItemClick}  />
-                    </Menu.Menu>
+                    <Menu.Item name="propostas" active={page === 'propostas'}  as={Link} to="/"  onClick={this.handleItemClick}/>
                 </Menu>
             </header>
         );
