@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {Form, Button, Divider, Search} from 'semantic-ui-react'
-import form from './form.css'
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import customStyle from './proposta.css'
 import {Api} from '../../services'
+import SelectedCourses from '../SelectedCourses'
 
 class Proposta extends Component {
 
     defaultOptions = [];
 
     state = {
-        client: {},
+        customer: {},
         selectedCourses: [],
     };
 
@@ -18,26 +18,16 @@ class Proposta extends Component {
 
     handleSubmit = () => {
 
-        const {selectedCourses, client} = this.state;
-        const courses = selectedCourses.map(course => {return {code: course.value, platform: course.platform}})
+        const {selectedCourses, customer} = this.state;
 
-        const payload = {   commercialName: client.commercialName,
-            businessName: client.name,
-            cnpj: client.cnpj,
-            courses: courses
-        };
+        Api.downloadOffer(customer, selectedCourses);
 
-        const headers = {'Content-Type': 'application/json'};
-        const request = {method: 'post', body: JSON.stringify(payload), headers }
-
-        fetch("http://localhost:8080/offers", request)
-            .then(response => this.props.history.push("/offers"));
     };
 
     resultRender = (option) => {
         const {course} = option;
 
-        return <div key={course.code} className={form.course_item}>{course.name}</div>
+        return <div key={course.code} className={customStyle.course_result}>{course.name}</div>
     } ;
 
     resetSearch = () => this.setState({isLoading: false, results: [], value: ''});
@@ -54,6 +44,15 @@ class Proposta extends Component {
 
 
         this.setState({selectedCourses});
+    };
+
+    reorder = (list, startIndex, endIndex) => {
+
+        const result = [...list];
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+
+        this.setState({selectedCourses: result});
     };
 
     handleSearchCourse = (event, {value}) => {
@@ -77,7 +76,7 @@ class Proposta extends Component {
 
     };
 
-    removeSelectedCourse(event, course) {
+    removeSelectedCourse = (event, course) => {
         let {selectedCourses} = this.state;
 
         const index = selectedCourses.indexOf(course);
@@ -85,36 +84,6 @@ class Proposta extends Component {
         selectedCourses.splice(index, 1);
 
         this.setState({selectedCourses});
-
-    }
-
-    reorder = (list, startIndex, endIndex) => {
-
-        const result = [...list];
-        const [removed] = result.splice(startIndex, 1);
-        result.splice(endIndex, 0, removed);
-
-        return result;
-    };
-
-
-    onDragEnd = (result) => {
-
-
-        // Dropado fora da lista
-        if (!result.destination) {
-            return;
-        }
-
-        // Mágica
-        const items = this.reorder(
-            this.state.selectedCourses,
-            result.source.index,
-            result.destination.index
-        );
-
-
-        this.setState({selectedCourses: items});
 
     };
 
@@ -128,10 +97,10 @@ class Proposta extends Component {
 
     render() {
 
-        const {client, isLoading, results, value, selectedCourses} = this.state;
+        const {customer, isLoading, results, value, selectedCourses} = this.state;
         const disableSubmmit = selectedCourses.length === 0;
         return (
-            <div className={form.content}>
+            <div className={customStyle.content}>
 
 
                 <h1>Cadastro de propostas</h1>
@@ -141,18 +110,18 @@ class Proposta extends Component {
                 <Form onSubmit={this.handleSubmit}>
 
                     <Form.Field>
-                        <Form.Input label="Razão Social" name="client.name" placeholder="Empresa LTDA"
-                                    content={client.name} onChange={this.handleChange} required/>
+                        <Form.Input label="Razão Social" name="client.businessName" placeholder="Empresa LTDA"
+                                    content={customer.businessName} onChange={this.handleChange} required/>
                     </Form.Field>
 
                     <Form.Field>
-                        <Form.Input label="Nome Santasia" name="client.name" placeholder="Empresa"
-                                    content={client.commercialName} onChange={this.handleChange} required/>
+                        <Form.Input label="Nome Santasia" name="client.commercialName" placeholder="Empresa"
+                                    content={customer.commercialName} onChange={this.handleChange} required/>
                     </Form.Field>
 
                     <Form.Field>
-                        <Form.Input label="CNPJ" name="client.document" placeholder="11.111.111/1111-11"
-                                    content={client.document} onChange={this.handleChange} required/>
+                        <Form.Input label="CNPJ" name="client.cnpj" placeholder="11.111.111/1111-11"
+                                    content={customer.cnpj} onChange={this.handleChange} required/>
                     </Form.Field>
 
 
@@ -170,47 +139,9 @@ class Proposta extends Component {
                         />
                     </Form.Field>
 
+                    <SelectedCourses reorder={this.reorder} selectedCourses={selectedCourses} removeSelectedCourse={this.removeSelectedCourse}/>
 
-                    <DragDropContext onDragEnd={this.onDragEnd}>
-                        <Droppable droppableId="droppable">
-                            {(provided) => (
-                                <div ref={provided.innerRef} className={form.courses}>
-                                    {selectedCourses.map((option, index) => {
-
-                                        let {text, value} = option;
-
-                                        return (
-                                            <Draggable draggableId={value} index={index} key={index}>
-                                                {(provided) => (
-                                                    <div>
-                                                        <div className={form.course_item}
-                                                             ref={provided.innerRef}
-                                                             {...provided.draggableProps}
-                                                             {...provided.dragHandleProps}
-                                                        >
-                                                            {text}
-
-                                                            <a className={form.couse_item_close}
-                                                               onClick={(e) => this.removeSelectedCourse(e, option)}>
-                                                                <span/>
-                                                            </a>
-
-                                                        </div>
-                                                        {provided.placeholder}
-                                                    </div>
-                                                )}
-                                            </Draggable>
-
-                                        )
-                                    })}
-
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    </DragDropContext>
-
-                    <Button type='submit' disabled={disableSubmmit}>Salvar</Button>
+                    <Button type='submit' disabled={disableSubmmit}>Gerar Proposta</Button>
 
                 </Form>
             </div>
