@@ -1,15 +1,13 @@
 import React, {Component} from 'react';
-import {Form, Button, Divider, Search, Label} from 'semantic-ui-react'
+import {Form, Button, Divider, Search} from 'semantic-ui-react'
 import form from './form.css'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import {Course, CourseOptionDTO} from '../../../domains';
+
 
 class PropostaForm extends Component {
 
-    defaultOptions = [
-        {value: "FJ-11", text: "Java e Orientação a objetos"},
-        {value: "FJ-21", text: "Java e Desenvolvimento Web"},
-        {value: "FJ-22", text: "Desenvolvimento na prática com spring e testes"}
-    ];
+    defaultOptions = [];
 
     state = {
         client: {},
@@ -17,20 +15,37 @@ class PropostaForm extends Component {
     };
 
 
-
-
     handleChange = (event, {name, value}) => this.setState({[name]: value});
 
-    handleSubmit = () => { };
+    handleSubmit = () => {
 
-    resultRender = ({text, value}) => <Label key={value} color={"blue"} >{value} - {text}</Label>;
+        const {selectedCourses, client} = this.state;
+        const courses = selectedCourses.map(course => {return {code: course.value, platform: course.platform}})
 
-    resetSearch = () => this.setState({isLoading: false, results:[], value: ''});
+        const payload = {   commercialName: client.commercialName,
+                            businessName: client.name,
+                            cnpj: client.cnpj,
+                            courses: courses
+                        };
+
+        const headers = {'Content-Type': 'application/json'};
+        const request = {method: 'post', body: JSON.stringify(payload), headers }
+
+        fetch("http://localhost:8080/offers", request)
+            .then(response => this.props.history.push("/offers"));
+    };
+
+    resultRender = (option) => {
+        const {course} = option;
+
+        return <div key={course.code} className={form.course_item}>{course.name}</div>
+    } ;
+
+    resetSearch = () => this.setState({isLoading: false, results: [], value: ''});
 
     handleResultSelect = (e, {result}) => {
         this.resetSearch();
         let {selectedCourses} = this.state;
-
 
         if (selectedCourses.includes(result)) {
             return
@@ -43,10 +58,9 @@ class PropostaForm extends Component {
     };
 
     handleSearchCourse = (event, {value}) => {
-        this.setState({isLoading:true, value});
+        this.setState({isLoading: true, value});
 
-
-        setTimeout( () => {
+        setTimeout(() => {
 
             if (this.state.value.length < 1) return this.resetSearch();
 
@@ -62,11 +76,9 @@ class PropostaForm extends Component {
         }, 500);
 
 
-
-
     };
 
-    removeSelectedCourse(event, course){
+    removeSelectedCourse(event, course) {
         let {selectedCourses} = this.state;
 
         const index = selectedCourses.indexOf(course);
@@ -107,7 +119,13 @@ class PropostaForm extends Component {
 
     };
 
-    componentWillMount(){
+    componentWillMount() {
+        fetch("http://localhost:8080/courses")
+            .then( response => response.json())
+            .then( (values) => values.map( (json) => new Course(json) ) )
+            .then( (courses) => courses.map( (course) => new CourseOptionDTO(course) ) )
+            .then( (options) => { this.defaultOptions = options } );
+
         this.resetSearch();
     };
 
@@ -115,7 +133,7 @@ class PropostaForm extends Component {
     render() {
 
         const {client, isLoading, results, value, selectedCourses} = this.state;
-
+        const disableSubmmit = selectedCourses.length === 0;
         return (
             <div className={form.content}>
 
@@ -127,60 +145,65 @@ class PropostaForm extends Component {
                 <Form onSubmit={this.handleSubmit}>
 
                     <Form.Field>
-                        <Form.Input label="Nome" name="client.name" placeholder="João da Silva"
+                        <Form.Input label="Razão Social" name="client.name" placeholder="Empresa LTDA"
                                     content={client.name} onChange={this.handleChange} required/>
                     </Form.Field>
 
+                    <Form.Field>
+                        <Form.Input label="Nome Santasia" name="client.name" placeholder="Empresa"
+                                    content={client.commercialName} onChange={this.handleChange} required/>
+                    </Form.Field>
 
                     <Form.Field>
-                        <Form.Input label="Endereço" name="client.address" placeholder="Rua dos bobos, nº 0"
-                                    content={client.address} onChange={this.handleChange} required/>
+                        <Form.Input label="CNPJ" name="client.document" placeholder="11.111.111/1111-11"
+                                    content={client.document} onChange={this.handleChange} required/>
                     </Form.Field>
 
 
                     <Divider horizontal>Cursos</Divider>
 
                     <Form.Field>
-                        <Search minCharacters={2} loading={isLoading}
+                        <Search
+                                minCharacters={2} loading={isLoading}
                                 placeholder="FJ-11"
                                 results={results}
                                 value={value}
                                 resultRenderer={this.resultRender}
                                 onResultSelect={this.handleResultSelect}
                                 onSearchChange={this.handleSearchCourse}
-                                />
+                        />
                     </Form.Field>
 
 
-
-
-
                     <DragDropContext onDragEnd={this.onDragEnd}>
-                        <Droppable droppableId="droppable"  >
+                        <Droppable droppableId="droppable">
                             {(provided) => (
                                 <div ref={provided.innerRef} className={form.courses}>
-                                    { selectedCourses.map((option, index) => {
+                                    {selectedCourses.map((option, index) => {
 
                                         let {text, value} = option;
 
                                         return (
-                                                <Draggable draggableId={value} index={index} key={index}>
-                                                    {(provided) => (
-                                                        <div>
-                                                            <div className={form.course_item}
-                                                                   ref={provided.innerRef}
-                                                                   {...provided.draggableProps}
-                                                                   {...provided.dragHandleProps}
-                                                            >
-                                                                {value} - {text}
+                                            <Draggable draggableId={value} index={index} key={index}>
+                                                {(provided) => (
+                                                    <div>
+                                                        <div className={form.course_item}
+                                                             ref={provided.innerRef}
+                                                             {...provided.draggableProps}
+                                                             {...provided.dragHandleProps}
+                                                        >
+                                                            {text}
 
-                                                                <a href="#" className={form.couse_item_close} onClick={(e) => this.removeSelectedCourse(e, option)}/>
+                                                            <a className={form.couse_item_close}
+                                                               onClick={(e) => this.removeSelectedCourse(e, option)}>
+                                                                <span/>
+                                                            </a>
 
-                                                            </div>
-                                                            {provided.placeholder}
                                                         </div>
-                                                    )}
-                                                </Draggable>
+                                                        {provided.placeholder}
+                                                    </div>
+                                                )}
+                                            </Draggable>
 
                                         )
                                     })}
@@ -191,8 +214,7 @@ class PropostaForm extends Component {
                         </Droppable>
                     </DragDropContext>
 
-
-                    <Button type='submit'>Salvar</Button>
+                    <Button type='submit' disabled={disableSubmmit}>Salvar</Button>
 
                 </Form>
             </div>

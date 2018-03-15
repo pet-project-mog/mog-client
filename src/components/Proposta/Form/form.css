@@ -35,7 +35,6 @@
 }
 
 :local(.course_item){
-    height: 2em;
     color: #fff;
     margin: 0.5em;
     background-color: #2185d0!important;
