@@ -1,6 +1,5 @@
 import {Course, CourseOptionDTO} from "../../domains";
 
-
 export default class Api {
 
     static fetchCourses(){
@@ -23,8 +22,10 @@ export default class Api {
             .then(response => response.blob())
             .then(blob => URL.createObjectURL(blob))
             .then(url => {
-                window.open(url, '_blank');
-                URL.revokeObjectURL(url);
+                let a = document.createElement("a");
+                a.href = url;
+                a.download = customer.commercialName + '.odt';
+                a.click()
             });
 
     }

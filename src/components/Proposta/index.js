@@ -3,13 +3,16 @@ import {Form, Button, Divider, Search} from 'semantic-ui-react'
 import customStyle from './proposta.css'
 import {Api} from '../../services'
 import SelectedCourses from '../SelectedCourses'
+import {Customer} from '../../domains';
 
 class Proposta extends Component {
 
     defaultOptions = [];
 
     state = {
-        customer: {},
+        businessName: '',
+        commercialName: '',
+        cnpj: '',
         selectedCourses: [],
     };
 
@@ -18,9 +21,9 @@ class Proposta extends Component {
 
     handleSubmit = () => {
 
-        const {selectedCourses, customer} = this.state;
+        const {selectedCourses, businessName, commercialName, cnpj} = this.state;
 
-        Api.downloadOffer(customer, selectedCourses);
+        Api.downloadOffer(new Customer(businessName, commercialName, cnpj), selectedCourses);
 
     };
 
@@ -97,7 +100,7 @@ class Proposta extends Component {
 
     render() {
 
-        const {customer, isLoading, results, value, selectedCourses} = this.state;
+        const {businessName,commercialName, cnpj, isLoading, results, value, selectedCourses} = this.state;
         const disableSubmmit = selectedCourses.length === 0;
         return (
             <div className={customStyle.content}>
@@ -110,18 +113,18 @@ class Proposta extends Component {
                 <Form onSubmit={this.handleSubmit}>
 
                     <Form.Field>
-                        <Form.Input label="Razão Social" name="client.businessName" placeholder="Empresa LTDA"
-                                    content={customer.businessName} onChange={this.handleChange} required/>
+                        <Form.Input label="Razão Social" name="businessName" placeholder="Empresa LTDA"
+                                    content={businessName} onChange={this.handleChange} required/>
                     </Form.Field>
 
                     <Form.Field>
-                        <Form.Input label="Nome Santasia" name="client.commercialName" placeholder="Empresa"
-                                    content={customer.commercialName} onChange={this.handleChange} required/>
+                        <Form.Input label="Nome Santasia" name="commercialName" placeholder="Empresa"
+                                    content={commercialName} onChange={this.handleChange} required/>
                     </Form.Field>
 
                     <Form.Field>
-                        <Form.Input label="CNPJ" name="client.cnpj" placeholder="11.111.111/1111-11"
-                                    content={customer.cnpj} onChange={this.handleChange} required/>
+                        <Form.Input label="CNPJ" name="cnpj" placeholder="11.111.111/1111-11"
+                                    content={cnpj} onChange={this.handleChange} required/>
                     </Form.Field>
 
 
