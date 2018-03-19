@@ -20,15 +20,12 @@ export default class Api {
 
         fetch("http://localhost:8080/offers", request)
             .then(response => response.blob())
-            .then(blob => URL.createObjectURL(blob))
+            .then(blob => URL.createObjectURL(blob) )
             .then(url => {
                 let a = document.createElement("a");
                 a.href = url;
                 a.download = customer.commercialName + '.odt';
                 a.click()
             });
-
     }
-
-
 }
