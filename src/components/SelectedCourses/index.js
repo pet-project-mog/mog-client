@@ -42,13 +42,13 @@ class SelectedCourses extends Component {
                         <div ref={provided.innerRef} className={customStyle.courses}>
                             {selectedCourses.map((option, index) => {
 
-                                let {text, value} = option;
+                                let {text, value, course} = option;
 
                                 return (
                                     <Draggable draggableId={value} index={index} key={index}>
                                         {(provided) => (
-                                            <div>
-                                                <div className={customStyle.course_item}
+                                            <div className={customStyle.course_wrapper}>
+                                                <div className={course.platform === 'ONLINE'? customStyle.online_item: customStyle.classroom_item}
                                                      ref={provided.innerRef}
                                                      {...provided.draggableProps}
                                                      {...provided.dragHandleProps}

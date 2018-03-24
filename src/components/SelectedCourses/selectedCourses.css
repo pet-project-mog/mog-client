@@ -1,38 +1,59 @@
 :local(.courses){
     position: relative;
     display: flex;
-    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
     margin: 1em 0;
-    border-radius:  0.5rem;
+    border-radius: 0.5rem;
     background-color: #f8ffff;
     box-shadow: 0 0 0 2px #a9d5de inset, 0 0 0 0 transparent;
     min-height: 5em;
+    flex-wrap: wrap;
 }
 
+:local(.couses:empty){
+    flex-wrap: auto;
+}
 
-:local(.courses:empty::after) {
+:local(.courses:empty::before) {
     content: 'Selecione pelo menos um curso';
     color: #276f8660;
     font-size: 1.5em;
     text-align: center;
-    width: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
     height: 2ch;
+    display: inline-block;
+}
+
+:local(.courses:empty::after) {
+    content: '*';
+    color: #db2828;
+    font-size: 1em;
+    text-align: center;
+    display: inline-block;
+    margin-left: 0.1em;
+}
+:local(.course_wrapper){
+    display: block;
+    width: 100%;
 }
 
 :local(.course_item){
     color: #fff;
     margin: 0.5em;
-    background-color: #2185d0!important;
-    border-color: #2185d0!important;
     border-radius: 0.2rem;
     text-align: center;
     line-height: 2em;
+    width: auto;
+}
+
+:local(.online_item){
+    composes: course_item;
+    background-color: #21d085!important;
+}
+
+:local(.classroom_item){
+    composes: course_item;
+    background-color: #2185d0!important;
 }
 
 :local(.couse_item_close){

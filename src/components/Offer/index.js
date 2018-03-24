@@ -8,7 +8,6 @@ import {Customer} from '../../domains';
 class Offer extends Component {
 
     defaultOptions = [];
-
     state = {
         businessName: '',
         commercialName: '',
@@ -30,7 +29,7 @@ class Offer extends Component {
     resultRender = (option) => {
         const {course} = option;
 
-        return <div key={course.code} className={customStyle.course_result}>{course.name}</div>
+        return <div key={course.code} className={course.platform === 'ONLINE'? customStyle.online_result: customStyle.classroom_result}>{course.name}</div>
     } ;
 
     resetSearch = () => this.setState({isLoading: false, results: [], value: ''});
@@ -101,7 +100,8 @@ class Offer extends Component {
     render() {
 
         const {businessName,commercialName, cnpj, isLoading, results, value, selectedCourses} = this.state;
-        const disableSubmmit = selectedCourses.length === 0;
+        let disableSubmmit = selectedCourses.length === 0 || businessName === '' || commercialName === '';
+
         return (
             <div className={customStyle.content}>
 

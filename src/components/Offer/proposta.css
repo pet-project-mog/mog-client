@@ -8,9 +8,18 @@
 :local(.course_result){
     color: #fff;
     margin: 0.5em;
-    background-color: #2185d0!important;
-    border-color: #2185d0!important;
+
     border-radius: 0.2rem;
     text-align: center;
     line-height: 2em;
+}
+
+:local(.online_result){
+    composes: course_result;
+    background-color: #21d085!important;
+}
+
+:local(.classroom_result){
+    composes: course_result;
+    background-color: #2185d0!important;
 }
