@@ -1,9 +1,7 @@
 
 export default class Customer {
 
-    constructor(businessName, commercialName, cnpj){
+    constructor(commercialName){
         this.commercialName = commercialName;
-        this.businessName = businessName;
-        this.cnpj = cnpj;
     }
 }

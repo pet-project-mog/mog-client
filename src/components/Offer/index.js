@@ -9,9 +9,7 @@ class Offer extends Component {
 
     defaultOptions = [];
     state = {
-        businessName: '',
         commercialName: '',
-        cnpj: '',
         selectedCourses: [],
     };
 
@@ -20,9 +18,9 @@ class Offer extends Component {
 
     handleSubmit = () => {
 
-        const {selectedCourses, businessName, commercialName, cnpj} = this.state;
+        const {selectedCourses, commercialName} = this.state;
 
-        Api.downloadOffer(new Customer(businessName, commercialName, cnpj), selectedCourses);
+        Api.downloadOffer(new Customer(commercialName), selectedCourses);
 
     };
 
@@ -99,8 +97,8 @@ class Offer extends Component {
 
     render() {
 
-        const {businessName,commercialName, cnpj, isLoading, results, value, selectedCourses} = this.state;
-        let disableSubmmit = selectedCourses.length === 0 || businessName === '' || commercialName === '';
+        const {commercialName, isLoading, results, value, selectedCourses} = this.state;
+        let disableSubmmit = selectedCourses.length === 0 || commercialName === '';
 
         return (
             <div className={customStyle.content}>
@@ -112,20 +110,12 @@ class Offer extends Component {
                 <Divider horizontal>Dados do cliente</Divider>
                 <Form onSubmit={this.handleSubmit}>
 
-                    <Form.Field>
-                        <Form.Input label="Razão Social" name="businessName" placeholder="Empresa LTDA"
-                                    content={businessName} onChange={this.handleChange} required/>
-                    </Form.Field>
 
                     <Form.Field>
-                        <Form.Input label="Nome Santasia" name="commercialName" placeholder="Empresa"
+                        <Form.Input label="Empresa" name="commercialName" placeholder="Caixa Econômica Federal"
                                     content={commercialName} onChange={this.handleChange} required/>
                     </Form.Field>
 
-                    <Form.Field>
-                        <Form.Input label="CNPJ" name="cnpj" placeholder="11.111.111/1111-11"
-                                    content={cnpj} onChange={this.handleChange} required/>
-                    </Form.Field>
 
 
                     <Divider horizontal>Cursos</Divider>
