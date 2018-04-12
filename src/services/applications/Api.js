@@ -1,9 +1,12 @@
 import {Course, CourseOptionDTO} from "../../domains";
+import Mog from './Environment';
 
 export default class Api {
 
+
+
     static fetchCourses(){
-        return fetch("http://localhost:8080/courses")
+        return fetch(Mog.backendURL("/courses"))
                     .then( response => response.json())
                     .then( (values) => values.map( (json) => new Course(json) ) )
                     .then( (courses) => courses.map( (course) => new CourseOptionDTO(course) ) );
@@ -18,7 +21,7 @@ export default class Api {
         const headers = {'Content-Type': 'application/json'};
         const request = {method: 'post', body: JSON.stringify(payload), headers }
 
-        fetch("http://localhost:8080/offers", request)
+        fetch(Mog.backendURL("/offers"), request)
             .then(response => response.blob())
             .then(blob => URL.createObjectURL(blob) )
             .then(url => {
@@ -28,4 +31,6 @@ export default class Api {
                 a.click()
             });
     }
+
+
 }
