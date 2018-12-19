@@ -4,12 +4,14 @@ import customStyle from './proposta.css'
 import {Api} from '../../services'
 import SelectedCourses from '../SelectedCourses'
 import {Customer} from '../../domains';
+import Owner from '../../domains/models/Owner';
 
 class Offer extends Component {
 
     defaultOptions = [];
     state = {
         commercialName: '',
+        ownerName: '',
         selectedCourses: [],
     };
 
@@ -18,9 +20,9 @@ class Offer extends Component {
 
     handleSubmit = () => {
 
-        const {selectedCourses, commercialName} = this.state;
+        const {selectedCourses, commercialName, ownerName} = this.state;
 
-        Api.downloadOffer(new Customer(commercialName), selectedCourses);
+        Api.downloadOffer(new Customer(commercialName), new Owner(ownerName), selectedCourses);
 
     };
 
@@ -97,7 +99,7 @@ class Offer extends Component {
 
     render() {
 
-        const {commercialName, isLoading, results, value, selectedCourses} = this.state;
+        const {commercialName, ownerName, isLoading, results, value, selectedCourses} = this.state;
         let disableSubmmit = selectedCourses.length === 0 || commercialName === '';
 
         return (
@@ -116,6 +118,10 @@ class Offer extends Component {
                                     content={commercialName} onChange={this.handleChange} required/>
                     </Form.Field>
 
+                    <Form.Field>
+                        <Form.Input label="Responsável Caelum" name="ownerName" placeholder="Bianca Cavalcante"
+                                    content={ownerName} onChange={this.handleChange} required/>
+                    </Form.Field>
 
 
                     <Divider horizontal>Cursos</Divider>
