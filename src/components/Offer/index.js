@@ -5,6 +5,7 @@ import {Api} from '../../services'
 import SelectedCourses from '../SelectedCourses'
 import {Customer} from '../../domains';
 import Owner from '../../domains/models/Owner';
+import Unit from '../../domains/models/Unit';
 
 class Offer extends Component {
 
@@ -12,17 +13,24 @@ class Offer extends Component {
     state = {
         commercialName: '',
         ownerName: '',
+        companyUnit: '',
         selectedCourses: [],
     };
 
 
-    handleChange = (event, {name, value}) => this.setState({[name]: value});
+    handleChange = ({ target }) => {
+        const formElements = target.closest('form').elements
+        const name = target.getAttribute('name')
+        const value = formElements[name].value
+
+        this.setState({[name]: value})
+    };
 
     handleSubmit = () => {
 
-        const {selectedCourses, commercialName, ownerName} = this.state;
+        const {selectedCourses, commercialName, ownerName, companyUnit} = this.state;
 
-        Api.downloadOffer(new Customer(commercialName), new Owner(ownerName), selectedCourses);
+        Api.downloadOffer(new Customer(commercialName), new Owner(ownerName), new Unit(companyUnit), selectedCourses);
 
     };
 
@@ -99,12 +107,11 @@ class Offer extends Component {
 
     render() {
 
-        const {commercialName, ownerName, isLoading, results, value, selectedCourses} = this.state;
+        const {commercialName, ownerName, companyUnit, isLoading, results, value, selectedCourses} = this.state;
         let disableSubmmit = selectedCourses.length === 0 || commercialName === '';
 
         return (
             <div className={customStyle.content}>
-
 
                 <h1>Cadastro de propostas</h1>
 
@@ -123,6 +130,15 @@ class Offer extends Component {
                                     content={ownerName} onChange={this.handleChange} required/>
                     </Form.Field>
 
+                    <Form.Field>
+                            <label className="unitLabel" htmlFor="companyUnit">Unidade</label>
+                            <select name="companyUnit" content={companyUnit} onChange={this.handleChange} required>
+                                <option value="" hidden>-- Selecione uma unidade --</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="BSB">Brasília</option>
+                            </select>
+                    </Form.Field>
 
                     <Divider horizontal>Cursos</Divider>
 
