@@ -108,13 +108,12 @@ class Offer extends Component {
     render() {
 
         const {commercialName, ownerName, companyUnit, isLoading, results, value, selectedCourses} = this.state;
-        let disableSubmmit = selectedCourses.length === 0 || commercialName === '';
+        let disableSubmmit = selectedCourses.length === 0 || commercialName === '' || ownerName === '' || companyUnit === '';
 
         return (
             <div className={customStyle.content}>
 
                 <h1>Cadastro de propostas</h1>
-
 
                 <Divider horizontal>Dados do cliente</Divider>
                 <Form onSubmit={this.handleSubmit}>
