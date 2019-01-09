@@ -4,7 +4,7 @@ import customStyle from './proposta.css'
 import {Api} from '../../services'
 import SelectedCourses from '../SelectedCourses'
 import {Customer} from '../../domains';
-import Owner from '../../domains/models/Owner';
+import Responsible from '../../domains/models/Responsible';
 import Unit from '../../domains/models/Unit';
 
 class Offer extends Component {
@@ -12,7 +12,7 @@ class Offer extends Component {
     defaultOptions = [];
     state = {
         commercialName: '',
-        ownerName: '',
+        responsibleName: '',
         companyUnit: '',
         selectedCourses: [],
     };
@@ -28,9 +28,9 @@ class Offer extends Component {
 
     handleSubmit = () => {
 
-        const {selectedCourses, commercialName, ownerName, companyUnit} = this.state;
+        const {selectedCourses, commercialName, responsibleName, companyUnit} = this.state;
 
-        Api.downloadOffer(new Customer(commercialName), new Owner(ownerName), new Unit(companyUnit), selectedCourses);
+        Api.downloadOffer(new Customer(commercialName), new Responsible(responsibleName), new Unit(companyUnit), selectedCourses);
 
     };
 
@@ -107,14 +107,14 @@ class Offer extends Component {
 
     render() {
 
-        const {commercialName, ownerName, companyUnit, isLoading, results, value, selectedCourses} = this.state;
-        let disableSubmmit = selectedCourses.length === 0 || commercialName === '' || ownerName === '' || companyUnit === '';
+        const {commercialName, responsibleName, companyUnit, isLoading, results, value, selectedCourses} = this.state;
+        let disableSubmmit = selectedCourses.length === 0 || commercialName === '' || responsibleName === '' || companyUnit === '';
 
         return (
             <div className={customStyle.content}>
 
                 <h1>Cadastro de propostas</h1>
-
+                { JSON.stringify(this.state) }
                 <Divider horizontal>Dados do cliente</Divider>
                 <Form onSubmit={this.handleSubmit}>
 
@@ -125,8 +125,8 @@ class Offer extends Component {
                     </Form.Field>
 
                     <Form.Field>
-                        <Form.Input label="Responsável Caelum" name="ownerName" placeholder="Bianca Cavalcante"
-                                    content={ownerName} onChange={this.handleChange} required/>
+                        <Form.Input label="Responsável Caelum" name="responsibleName" placeholder="Bianca Cavalcante"
+                                    content={responsibleName} onChange={this.handleChange} required/>
                     </Form.Field>
 
                     <Form.Field>
