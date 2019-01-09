@@ -13,11 +13,11 @@ export default class Api {
                     .catch(console.log("Não foi possível carregar os cursos"));
     }
 
-    static downloadOffer(customer, responsibleName, companyUnit, coursesDTO){
+    static downloadOffer(customer, responsibleName, caelumDistrict, coursesDTO){
 
         const courses = coursesDTO.map(dto => dto.toEntity());
 
-        const payload = {   ...customer, ...responsibleName, ...companyUnit, courses };
+        const payload = {   ...customer, ...responsibleName, ...caelumDistrict, courses };
 
         const headers = {'Content-Type': 'application/json'};
         const request = {method: 'post', body: JSON.stringify(payload), headers }

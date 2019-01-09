@@ -5,7 +5,7 @@ import {Api} from '../../services'
 import SelectedCourses from '../SelectedCourses'
 import {Customer} from '../../domains';
 import Responsible from '../../domains/models/Responsible';
-import Unit from '../../domains/models/Unit';
+import District from '../../domains/models/District';
 
 class Offer extends Component {
 
@@ -13,7 +13,7 @@ class Offer extends Component {
     state = {
         commercialName: '',
         responsibleName: '',
-        companyUnit: '',
+        caelumDistrict: '',
         selectedCourses: [],
     };
 
@@ -28,9 +28,9 @@ class Offer extends Component {
 
     handleSubmit = () => {
 
-        const {selectedCourses, commercialName, responsibleName, companyUnit} = this.state;
+        const {selectedCourses, commercialName, responsibleName, caelumDistrict} = this.state;
 
-        Api.downloadOffer(new Customer(commercialName), new Responsible(responsibleName), new Unit(companyUnit), selectedCourses);
+        Api.downloadOffer(new Customer(commercialName), new Responsible(responsibleName), new District(caelumDistrict), selectedCourses);
 
     };
 
@@ -107,14 +107,14 @@ class Offer extends Component {
 
     render() {
 
-        const {commercialName, responsibleName, companyUnit, isLoading, results, value, selectedCourses} = this.state;
-        let disableSubmmit = selectedCourses.length === 0 || commercialName === '' || responsibleName === '' || companyUnit === '';
+        const {commercialName, responsibleName, caelumDistrict, isLoading, results, value, selectedCourses} = this.state;
+        let disableSubmmit = selectedCourses.length === 0 || commercialName === '' || responsibleName === '' || caelumDistrict === '';
 
         return (
             <div className={customStyle.content}>
 
                 <h1>Cadastro de propostas</h1>
-                { JSON.stringify(this.state) }
+
                 <Divider horizontal>Dados do cliente</Divider>
                 <Form onSubmit={this.handleSubmit}>
 
@@ -130,8 +130,8 @@ class Offer extends Component {
                     </Form.Field>
 
                     <Form.Field>
-                            <label className="unitLabel" htmlFor="companyUnit">Unidade</label>
-                            <select name="companyUnit" content={companyUnit} onChange={this.handleChange} required>
+                            <label className="unitLabel" htmlFor="caelumDistrict">Unidade</label>
+                            <select name="caelumDistrict" content={caelumDistrict} onChange={this.handleChange} required>
                                 <option value="" hidden>-- Selecione uma unidade --</option>
                                 <option value="SP">São Paulo</option>
                                 <option value="RJ">Rio de Janeiro</option>
